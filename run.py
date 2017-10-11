@@ -22,10 +22,16 @@ def index():
     return 'go away'
 
 @app.route('/list')
+def list_form():
+    return render_template('list_form.html')
+
+@app.route('/list', methods=['POST'])
 def list_db():
-    numbers = utils.get_all_numbers()
+    phrase_text = request.form['text']
+    #numbers = utils.get_all_numbers()
     #numbers = zip(#)
-    return render_template('list.html', x = numbers)
+    #return render_template('list.html', x = numbers)
+    return phrase_text
 
 @app.route('/api/register', methods=['GET', 'POST'])
 def register():

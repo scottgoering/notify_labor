@@ -21,17 +21,16 @@ voice = 'alice'
 def index():
     return 'go away'
 
-@app.route('/list')
-def list_form():
-    return render_template('list_form.html')
-
-@app.route('/list', methods=['POST'])
+@app.route('/list', methods=['POST', 'GET'])
 def list_db():
-    phrase_text = request.form['text']
-    #numbers = utils.get_all_numbers()
-    #numbers = zip(#)
-    #return render_template('list.html', x = numbers)
-    return phrase_text
+    if request.method == 'GET':
+        return render_template('list_form.html')
+    else:
+        phrase_text = request.form['txt-phrase']
+        #numbers = utils.get_all_numbers()
+        #numbers = zip(#)
+        #return render_template('list.html', x = numbers)
+        return phrase_text
 
 @app.route('/api/register', methods=['GET', 'POST'])
 def register():

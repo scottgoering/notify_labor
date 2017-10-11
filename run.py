@@ -2,6 +2,7 @@ import requests
 import twilio.twiml
 from flask import Flask
 from flask import redirect
+from flask import render_template
 from flask import request
 from flask import url_for
 from twilio.rest import TwilioRestClient
@@ -22,7 +23,8 @@ def index():
 
 @app.route('/list')
 def list_db():
-    return 'test'
+    numbers = utils.get_all_numbers()
+    return render_template('list.html', numbers)
 
 @app.route('/api/register', methods=['GET', 'POST'])
 def register():

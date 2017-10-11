@@ -1,11 +1,20 @@
 <!doctype html>
 <html>
-   <body>
-    {% for row in x %}
-        <tr>
-          <td>{{ row[0]|tojson|safe }}</td>
-          <td>{{ row[1] }}</td>
-        </tr>
-    {% endfor %}
-   </body>
+    <body>
+        <table>
+            <thead>
+                <th>Number</th>
+                <th>Call?</th>
+            </thead>
+
+            <tbody>
+                {% for row in x %}
+                    <tr>
+                        <td>{{ row[0]|tojson|safe }}</td>
+                        <td>{{ row[1] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
 </html>

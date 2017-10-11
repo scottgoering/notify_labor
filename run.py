@@ -24,6 +24,7 @@ def index():
 @app.route('/list')
 def list_db():
     numbers = utils.get_all_numbers()
+    #numbers = zip(#)
     return render_template('list.html', x = numbers)
 
 @app.route('/api/register', methods=['GET', 'POST'])

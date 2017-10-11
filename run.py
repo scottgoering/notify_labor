@@ -1,13 +1,12 @@
-import twilio.twiml
-from twilio.rest import TwilioRestClient
-from flask import Flask
-from flask import request
-from flask import redirect
-from flask import url_for
 import requests
+import twilio.twiml
+from flask import Flask
+from flask import redirect
+from flask import request
+from flask import url_for
+from twilio.rest import TwilioRestClient
 
 import utils
-
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -21,6 +20,9 @@ voice = 'alice'
 def index():
     return 'go away'
 
+@app.route('/list')
+def list_db():
+    return 'test'
 
 @app.route('/api/register', methods=['GET', 'POST'])
 def register():

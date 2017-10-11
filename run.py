@@ -27,10 +27,12 @@ def list_db():
         return render_template('list_form.html')
     else:
         phrase_text = request.form['txt-phrase']
-        #numbers = utils.get_all_numbers()
-        #numbers = zip(#)
-        #return render_template('list.html', x = numbers)
-        return phrase_text
+        if phrase_text == app.config['LABOR_PHRASE']:
+            numbers = utils.get_all_numbers()
+            return render_template('list.html', x = numbers)
+            return phrase_text
+        else:
+            return 'Wrong Phrase sucka'
 
 @app.route('/api/register', methods=['GET', 'POST'])
 def register():

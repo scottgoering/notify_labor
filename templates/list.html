@@ -1,6 +1,11 @@
-{% for row in x %}
-    <tr>
-      <td>{{ row[0]|tojson|safe }}</td>
-      <td>{{ row[1] }}</td>
-    </tr>
-{% endfor %}
+<!doctype html>
+<html>
+   <body>
+    {% for row in x %}
+        <tr>
+          <td>{{ row[0]|tojson|safe }}</td>
+          <td>{{ row[1] }}</td>
+        </tr>
+    {% endfor %}
+   </body>
+</html>

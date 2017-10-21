@@ -1,13 +1,13 @@
-import twilio.twiml
-from twilio.rest import TwilioRestClient
-from flask import Flask
-from flask import request
-from flask import redirect
-from flask import url_for
 import requests
+import twilio.twiml
+from flask import Flask
+from flask import redirect
+from flask import render_template
+from flask import request
+from flask import url_for
+from twilio.rest import TwilioRestClient
 
 import utils
-
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -21,6 +21,18 @@ voice = 'alice'
 def index():
     return 'go away'
 
+@app.route('/list', methods=['POST', 'GET'])
+def list_db():
+    if request.method == 'GET':
+        return render_template('list_form.html')
+    else:
+        phrase_text = request.form['txt-phrase']
+        if phrase_text == app.config['LABOR_PHRASE']:
+            numbers = utils.get_all_numbers()
+            return render_template('list.html', x = numbers)
+            return phrase_text
+        else:
+            return 'Wrong Phrase sucka'
 
 @app.route('/api/register', methods=['GET', 'POST'])
 def register():
@@ -180,5 +192,5 @@ def handle_recording():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=app.config['PORT'])
+    app.run(host='0.0.0.0', port=app.config['PORT'], debug=True)
 

@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+    <body>
+    <style>
+    table, th, td {
+        border: 1px solid black;
+    }
+    </style>
+        <table>
+            <thead>
+                <th>Number</th>
+                <th>Call?</th>
+            </thead>
+
+            <tbody>
+                {% for row in x %}
+                    <tr>
+                        <td>{{ row[0]|tojson|safe }}</td>
+                        <td>{{ row[1] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>

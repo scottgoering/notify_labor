@@ -190,12 +190,11 @@ def handle_recording():
     #recording_url will contain a URI.
     # Need to append the twilio URL, since the URI is in reference to it
     recording_url = request.values.get('RecordingUrl', None)
-    recording_url = 'https://api.twilio.com' + recording_url
     resp = twilio.twiml.Response()
     resp.say('Thank you for leaving a message! Goodbye.', voice=voice)
     resp.hangup()
     filename = 'recordings/'+request.values.get('To', None)+'.mp3'
-    r = requests.get(recording_url+'.mp3', stream=True)
+    r = requests.get('api.twilio.com' + recording_url+'.mp3', stream=True)
     with open(filename, 'wb') as fd:
         for chunk in r.iter_content():
             fd.write(chunk)

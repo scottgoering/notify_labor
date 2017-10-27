@@ -21,6 +21,7 @@ voice = 'alice'
 def index():
     return 'go away'
 
+
 @app.route('/list', methods=['POST', 'GET'])
 def list_db():
     if request.method == 'GET':
@@ -29,17 +30,17 @@ def list_db():
         phrase_text = request.form['txt-phrase']
         if phrase_text == app.config['LABOR_PHRASE']:
             numbers = utils.get_all_numbers()
-            return render_template('list.html', x = numbers)
-            return phrase_text
+            return render_template('list.html', x=numbers)
         else:
             return 'Wrong Phrase sucka'
+
 
 @app.route('/api/register', methods=['GET', 'POST'])
 def register():
     resp = twilio.twiml.Response()
     resp.say('Welcome to the %s Notifier.' % app.config['BABY_NICKNAME'], voice=voice)
     with resp.gather(numDigits=10, action=url_for('confirm'), method='POST') as g:
-        g.say('To register to receive a phone call once the baby is born, please enter your '\
+        g.say('To register to receive a phone call once the baby is born, please enter your '
               'phone number starting with the 3 digit area code, followed by the 7 digit number', voice=voice)
     return str(resp)
 
@@ -50,7 +51,8 @@ def confirm():
     digits = request.values.get('Digits', None)
     digits_spaced = ','.join(ch for ch in digits)
     with resp.gather(numDigits=1, action=url_for('confirm_route', number=digits), method='GET') as g:
-        g.say('You entered the number ' + digits_spaced + '. If this is correct, press 1. Otherwise, press 2.', voice=voice)
+        g.say('You entered the number ' + digits_spaced + '. If this is correct, press 1. Otherwise, press 2.',
+              voice=voice)
     return str(resp)
 
 
@@ -72,7 +74,7 @@ def text_or_call():
     resp = twilio.twiml.Response()
     number = request.args.get('number', None)
     with resp.gather(numDigits=1, action=url_for('save_number', number=number), method='GET') as g:
-        g.say('If you would like to receive a text message, press 1. If you would like to receive a' \
+        g.say('If you would like to receive a text message, press 1. If you would like to receive a'
               ' phone call, press 2.', voice=voice)
     return str(resp)
 
@@ -82,7 +84,7 @@ def save_number():
     resp = twilio.twiml.Response()
     digit = request.args.get('Digits', None)
     number = request.args.get('number', None)
-    text = None
+
     if digit == '1':
         text = True
     elif digit == '2':
@@ -91,7 +93,6 @@ def save_number():
         resp.say(digit+' is not a valid choice.')
         resp.redirect(url_for('text_or_call', number=number), method='GET')
         return str(resp)
-    number_spaced = ' '.join(ch for ch in number)
     number = '+1' + number
     utils.insert_to_db(number, text)
     resp.say('Thank you. You will receive a notification at that number once the baby is born.', voice=voice)
@@ -152,14 +153,13 @@ def notify():
     return str(resp)
 
 
-
 @app.route('/api/notify', methods=['GET', 'POST'])
 def notify_number():
     resp = twilio.twiml.Response()
     resp.pause(length=1)
     resp.say('Hello, this is your %s update. %s' % (app.config['BABY_NICKNAME'], MESSAGE), voice=voice)
     with resp.gather(numDigits=1, action=url_for('record_menu'), method='POST') as g:
-        g.say('If you would like to leave a message for the happy family, please press 1. '\
+        g.say('If you would like to leave a message for the happy family, please press 1. '
               'If you do not wish to leave a message, you may hang up.', voice=voice)
     return str(resp)
 
@@ -179,7 +179,7 @@ def record_menu():
 @app.route('/api/record', methods=['GET', 'POST'])
 def record():
     resp = twilio.twiml.Response()
-    resp.say('Record your message after the tone. Make sure to state your name, and note '\
+    resp.say('Record your message after the tone. Make sure to state your name, and note '
              'that the recording is only 30 seconds. When done, press the pound sign.', voice=voice)
     resp.record(maxLength='30', action=url_for('handle_recording'), finishOnKey='#')
     return str(resp)

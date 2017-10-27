@@ -2,7 +2,8 @@ import os
 import sqlite3
 
 DB_NAME = 'numbers.db'
-SCHEMA = 'create table numbers (id integer primary key autoincrement not null,number text not null,text integer not null)'
+SCHEMA = 'create table numbers (id integer primary key autoincrement not null,' \
+         'number text not null,text integer not null)'
 
 
 def init_db():

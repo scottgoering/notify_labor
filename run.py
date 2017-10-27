@@ -118,10 +118,19 @@ def notify():
 
     if sendmessage:
         numbers = utils.get_all_numbers()
+        """
+        If the baby is born, and the subscriber wants to get a phone call, call them.  Otherwise text them.
+        """
         for number in numbers:
-            if number[1] == 0:
-                client.calls.create(to=number[0], from_=app.config['NUMBER'],
-                                    url=app.config['URL']+':'+str(app.config['PORT'])+'/api/notify')
+            if born:
+                if number[1] == 0:
+                    client.calls.create(to=number[0], from_=app.config['NUMBER'],
+                                        url=app.config['URL'] + ':' + str(app.config['PORT']) + '/api/notify')
+                else:
+                    params = {'to': number[0], 'from_': app.config['NUMBER'], 'body': MESSAGE}
+                    if request.form['NumMedia'] == '1':
+                        params['MediaUrl'] = request.form['MediaUrl0']
+                    client.messages.create(**params)
             else:
                 params = {'to': number[0], 'from_': app.config['NUMBER'], 'body': MESSAGE}
                 if request.form['NumMedia'] == '1':

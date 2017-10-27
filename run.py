@@ -120,9 +120,8 @@ def notify():
         numbers = utils.get_all_numbers()
         for number in numbers:
             if number[1] == 0:
-                if born:
-                    client.calls.create(to=number[0], from_=app.config['NUMBER'],
-                                        url=app.config['URL']+':'+str(app.config['PORT'])+'/api/notify')
+                client.calls.create(to=number[0], from_=app.config['NUMBER'],
+                                    url=app.config['URL']+':'+str(app.config['PORT'])+'/api/notify')
             else:
                 params = {'to': number[0], 'from_': app.config['NUMBER'], 'body': MESSAGE}
                 if request.form['NumMedia'] == '1':

@@ -6,7 +6,7 @@ from flask import render_template
 from flask import request
 from flask import url_for
 from twilio.rest import TwilioRestClient
-
+import time
 import utils
 
 app = Flask(__name__)
@@ -40,7 +40,7 @@ def register():
     resp = twilio.twiml.Response()
     resp.say('Welcome to the %s Notifier.' % app.config['BABY_NICKNAME'], voice=voice)
     with resp.gather(numDigits=10, action=url_for('confirm'), method='POST') as g:
-        g.say('To register to receive a phone call once the baby is born, please enter your '
+        g.say('To register to receive a notification once the baby is born, please enter your '
               'phone number starting with the 3 digit area code, followed by the 7 digit number', voice=voice)
     return str(resp)
 
@@ -145,7 +145,7 @@ def notify():
         number = request.form['From']
         utils.insert_to_db(number, True)
         resp = twilio.twiml.Response()
-        resp.message('You have been signed up for %s birth notifications!' % app.config['BABY_NICKNAME'])
+        resp.message('You have been signed up for %s birth notifications! You will receive a text once Emily goes into labor and when the baby is born!' % app.config['BABY_NICKNAME'])
         return str(resp)
 
     resp = twilio.twiml.Response()
@@ -187,10 +187,14 @@ def record():
 
 @app.route('/api/handle_recording', methods=['GET', 'POST'])
 def handle_recording():
+    #recording_url will contain a URI.
+    # Need to append the twilio URL, since the URI is in reference to it
     recording_url = request.values.get('RecordingUrl', None)
+    print(recording_url)
     resp = twilio.twiml.Response()
     resp.say('Thank you for leaving a message! Goodbye.', voice=voice)
     resp.hangup()
+    time.sleep(2)
     filename = 'recordings/'+request.values.get('To', None)+'.mp3'
     r = requests.get(recording_url+'.mp3', stream=True)
     with open(filename, 'wb') as fd:
@@ -201,4 +205,3 @@ def handle_recording():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=app.config['PORT'], debug=True)
-
